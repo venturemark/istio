@@ -1,0 +1,5 @@
+cluster:
+  name: "kia02"
+  zone: "aws.example.com"
+dns:
+  cname: ""
