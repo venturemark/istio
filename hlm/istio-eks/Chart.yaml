@@ -1,0 +1,3 @@
+apiVersion: "v1"
+name: "istio-eks"
+version: "0.1.0"
