@@ -18,7 +18,7 @@ spec:
         #
         - "*.{{ .Values.cluster.name }}.{{ .Values.cluster.zone }}"
       port:
-        name: "https"
+        name: "https-route53"
         number: 443
         protocol: "HTTPS"
       tls:
@@ -35,7 +35,7 @@ spec:
         #
         - "{{ .Values.dns.cname }}"
       port:
-        name: "https"
+        name: "https-cloudflare"
         number: 443
         protocol: "HTTPS"
       tls:
