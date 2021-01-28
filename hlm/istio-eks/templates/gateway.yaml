@@ -8,11 +8,7 @@ spec:
   selector:
     istio: "ingressgateway"
   servers:
-    - port:
-        name: "https"
-        number: 443
-        protocol: "HTTPS"
-      hosts:
+    - hosts:
         # In a remote setup using eks the istio ingress gateway forwards traffic
         # based on wildcard expressions of a hosted zone. This allows virtual
         # services to specific subdomains of their micro services according to
@@ -21,15 +17,28 @@ spec:
         #     *.kia02.aws.example.com
         #
         - "*.{{ .Values.cluster.name }}.{{ .Values.cluster.zone }}"
-        {{- if .Values.dns.cname }}
-        # In a remote setup using eks we can forward traffic based on a pretty
-        # shortcut domain, if any.
-        #
-        #     app.example.com
-        #
-        - "{{ .Values.dns.cname }}"
-        {{- end }}
+      port:
+        name: "https-route53"
+        number: 443
+        protocol: "HTTPS"
       tls:
         mode: "SIMPLE"
-        credentialName: "ingressgateway"
+        credentialName: "gateway-route53"
+        minProtocolVersion: "TLSV1_2"
+
+    - hosts:
+        # In a remote setup using eks the istio ingress gateway forwards traffic
+        # based on a cname of a hosted zone. This allows virtual services to
+        # be served via a special subdomain.
+        #
+        #     beta.example.com
+        #
+        - "{{ .Values.dns.cname }}"
+      port:
+        name: "https-cloudflare"
+        number: 443
+        protocol: "HTTPS"
+      tls:
+        mode: "SIMPLE"
+        credentialName: "gateway-cloudflare"
         minProtocolVersion: "TLSV1_2"

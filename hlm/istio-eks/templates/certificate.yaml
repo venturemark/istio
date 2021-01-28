@@ -1,7 +1,7 @@
 apiVersion: "cert-manager.io/v1"
 kind: "Certificate"
 metadata:
-  name: "ingressgateway"
+  name: "gateway-route53"
 spec:
   dnsNames:
     # The DNS name for the certificate must match the host expression the
@@ -10,19 +10,32 @@ spec:
     #     *.kia02.aws.example.com
     #
     - "*.{{ .Values.cluster.name }}.{{ .Values.cluster.zone }}"
-    {{- if .Values.dns.cname }}
+  # The certificate TTL is 90 days.
+  duration: "2160h"
+  issuerRef:
+    kind: "ClusterIssuer"
+    name: "letsencrypt-route53"
+  # The certificates should be renewed 30 days before they expire.
+  renewBefore: "720h"
+  secretName: "gateway-route53"
+---
+apiVersion: "cert-manager.io/v1"
+kind: "Certificate"
+metadata:
+  name: "gateway-cloudflare"
+spec:
+  dnsNames:
     # In a remote setup using eks we can forward traffic based on a pretty
     # shortcut domain, if any.
     #
     #     app.example.com
     #
     - "{{ .Values.dns.cname }}"
-    {{- end }}
   # The certificate TTL is 90 days.
   duration: "2160h"
   issuerRef:
     kind: "ClusterIssuer"
-    name: "letsencrypt"
+    name: "letsencrypt-cloudflare"
   # The certificates should be renewed 30 days before they expire.
   renewBefore: "720h"
-  secretName: "ingressgateway"
+  secretName: "gateway-cloudflare"
