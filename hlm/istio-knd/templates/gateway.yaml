@@ -20,6 +20,7 @@ spec:
         protocol: "HTTP"
       hosts:
         - "*"
+
     # This port is reserved for the apiserver. For more information see the
     # following files.
     #
@@ -30,5 +31,18 @@ spec:
         name: "apiserver"
         number: 30007
         protocol: "GRPC"
+      hosts:
+        - "*"
+
+    # This port is reserved for prometheus. For more information see the
+    # following files.
+    #
+    #     kia/env/knd/istio.yaml
+    #     kia/env/knd/kind.yaml
+    #
+    - port:
+        name: "prometheus"
+        number: 30009
+        protocol: "HTTP"
       hosts:
         - "*"
