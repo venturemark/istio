@@ -46,3 +46,16 @@ spec:
         protocol: "HTTP"
       hosts:
         - "*"
+
+    # This port is reserved for grafana. For more information see the following
+    # files.
+    #
+    #     kia/env/knd/istio.yaml
+    #     kia/env/knd/kind.yaml
+    #
+    - port:
+        name: "grafana"
+        number: 30030
+        protocol: "HTTP"
+      hosts:
+        - "*"
